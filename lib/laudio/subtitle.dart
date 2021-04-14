@@ -57,16 +57,13 @@ class Subtitle extends StatefulWidget {
   final double itemExtent;
 
   @override
-  State<StatefulWidget> createState() => _SubtitleState(startRollingLyrics:this.startRollingLyrics);
+  State<StatefulWidget> createState() => _SubtitleState();
 }
 
 class _SubtitleState extends State<Subtitle> {
 
-  _SubtitleState({this.startRollingLyrics});
-
   ScrollController _controller;
   int _currentIndex = 0;
-  bool startRollingLyrics = false; // 开始滚动歌词
 
   @override
   void initState() {
@@ -79,7 +76,7 @@ class _SubtitleState extends State<Subtitle> {
   ///启动
   ///
   _startAni() async {
-    if (!startRollingLyrics){
+    if (!widget.startRollingLyrics){
       return;
     }
 
