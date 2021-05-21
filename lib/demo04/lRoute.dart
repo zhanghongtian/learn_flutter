@@ -17,7 +17,7 @@ class Screen01 extends StatelessWidget {
                   Navigator.push(
                       context,
                       new MaterialPageRoute(
-                          builder: (contxt) => new Screen02()));
+                          builder: (context) => new Screen02()));
                 },
                 child: new Text("跳转子页面"))),
       ),

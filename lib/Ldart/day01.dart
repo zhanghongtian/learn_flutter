@@ -17,4 +17,9 @@ void test01() {
 
 void main(List<String> args) {
   test01();
+  foo.add('2');
+  print(foo.map((e) => e + "aaa").toList());
+  print(foo.map((e) => e + "aaa"));
+  // print(foo);
+  print(foo.length);
 }
