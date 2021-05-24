@@ -5,6 +5,12 @@ import 'package:flutter_app2/demo05/LcardAndWigetData/pages/news_list.dart';
 import 'create_news.dart';
 
 class ManagerNews extends StatelessWidget {
+  final List<Map<String, String>> _news;
+  final Function _addNews;
+  final Function _deleteNews;
+
+  ManagerNews(this._news, this._addNews, this._deleteNews);
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -17,11 +23,11 @@ class ManagerNews extends StatelessWidget {
                     title: Text("选择"),
                   ),
                   ListTile(
-                    title: Text("咨询列表"),
+                    title: Text("资讯列表"),
                     onTap: () {
                       Navigator.pushReplacement(context,
                           MaterialPageRoute(builder: (context) {
-                        // return NewsListPage();
+                        return NewsListPage(_news, _addNews, _deleteNews);
                       }));
                     },
                   )
@@ -29,7 +35,7 @@ class ManagerNews extends StatelessWidget {
               ),
             ),
             appBar: new AppBar(
-              title: Text("管理咨询"),
+              title: Text("管理资讯"),
               bottom: TabBar(
                 tabs: [
                   Tab(
@@ -44,7 +50,7 @@ class ManagerNews extends StatelessWidget {
               ),
             ),
             body: TabBarView(
-              children: [CreateNewsPagePage(), MyNews()],
+              children: [CreateNewsPagePage(_addNews, _deleteNews), MyNews()],
             )));
   }
 }

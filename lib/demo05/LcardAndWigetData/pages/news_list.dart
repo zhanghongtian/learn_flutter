@@ -23,7 +23,8 @@ class NewsListPage extends StatelessWidget {
               automaticallyImplyLeading: false,
             ),
             ListTile(
-              title: Text("管理咨询"),
+              leading: Icon(Icons.favorite,size: 20,color: Colors.red,),
+              title: Text("管理资讯"),
               onTap: () {
                 Navigator.pushReplacementNamed(context, '/admin');
               },
@@ -33,6 +34,9 @@ class NewsListPage extends StatelessWidget {
       ),
       appBar: new AppBar(
         title: Text("资讯标题"),
+        actions: [
+          IconButton(icon: Icon(Icons.favorite,size: 22,color: Colors.white,), onPressed: (){})
+        ],
       ),
       body: NewsManager(_news,_addNews,_deleteNews),
     );

@@ -15,9 +15,9 @@ class NewsControl extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: ElevatedButton(
-        child: Text("添加咨询"),
+        child: Text("添加资讯"),
         onPressed: () {
-          addNews({"title": "咨询第二个", "imageUrl": "assets/images/news01.png"});
+          addNews({"title": "资讯第二个", "imageUrl": "assets/images/news01.png"});
         },
       ),
     );

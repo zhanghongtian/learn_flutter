@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_app2/Ldart/day02.dart';
 import 'package:flutter_app2/demo05/LcardAndWigetData/pages/manage_news.dart';
 import 'package:flutter_app2/demo05/LcardAndWigetData/pages/news_detail.dart';
 
+import 'pages/auth_page.dart';
 import 'pages/news_list.dart';
 
 /**
@@ -64,10 +64,14 @@ class _MyAppState extends State<MyApp> {
         //   );
         // },
         '/admin': (context) {
-          return ManagerNews();
+          return ManagerNews(_news, _addNews, _deleteNews);
         },
-        '/': (context) {
+        '/home': (context) {
           return NewsListPage(_news, _addNews, _deleteNews);
+        }
+        ,
+        '/':(context){
+          return AuthPage();
         }
       },
       debugShowMaterialGrid: false,
@@ -120,11 +124,13 @@ class _MyAppState extends State<MyApp> {
         }
         if (paths[1] == 'news') {
           final index = int.parse(paths[2]);
+          print("new_index:" + index.toString());
           return MaterialPageRoute(builder: (context) {
             return NewsDetailPage(
                 title: _news.length - 1 >= index ? _news[index]['title'] : '',
-                imageUrl:
-                    _news.length - 1 >= index ? _news[index]['imageUrl'] : '');
+                imageUrl: _news.length - 1 >= index
+                    ? _news[index]['imageUrl']
+                    : 'assets/images/news01.png');
           });
         }
         // return MaterialPageRoute(builder: (context){

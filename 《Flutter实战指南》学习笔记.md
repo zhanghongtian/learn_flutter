@@ -48,6 +48,26 @@ MainAxisAlignment 主轴对齐
 
 crossAxisAlignment 横轴对齐
 
+Row 行
+
+Column 列
+
+Expanded 扩展，扩充内存，扩充，扩大
+
+Flexible 灵活的、可变动的、柔韧的、有弹性的、可弯曲的
+
+Media 介质、媒体，在这里指手机、或者平板，大众传播工具
+
+MediaQuery 查看媒体介质的参数
+
+EdgeInsets 边缘集
+
+symmetric 对称的
+
+horizontal 水平的
+
+
+
 
 
 ### 导航相关
@@ -57,6 +77,36 @@ Navigator [ˈnævɪɡeɪtə(r)] 导航器 用来实现页面之前的切换 数�
 WillPopScope 即将弹出的作用域
 
 Replacement 替换、更换 Navigator的方法pushReplacement
+
+### 样式相关
+
+border 边界
+
+Radius 半径
+
+borderRadius 边界半径，配置圆边角
+
+circular 圆形的
+
+cover 遮盖、盖、撒上、洒上、罩子、封皮
+
+mode 方式、风格、样式、模式
+
+Opacity 不透明度
+
+Blend 混合、使混合、融合
+
+BlendMode 混合模式
+
+fillColor 填充的颜色
+
+filled 是否填满
+
+favorite 最喜欢的[在Icons中表示心型]
+
+border 边界、镶边、沿..的边
+
+
 
 
 
@@ -410,6 +460,258 @@ Navigator.push<bool>(context,
       body: NewsManager(),
     );
 ```
+
+### 解析导航路径数据
+
+指的是获取跳转路径中的值
+
+例如：/news/10的路径，可以解析获取到路径中的10
+
+配置MaterialApp小部件的中onGenerateRoute
+
+配置示例
+
+```dart
+      onGenerateRoute: (RouteSettings settings) { //在生成页面路由的时候调用
+        print(settings.name);
+        if (settings.name == '/') {
+          return null;
+        }
+        var paths = settings.name.split("/");
+        if (paths[0] != '') {
+          return null;
+        }
+        if (paths[1] == 'news') {
+          final index = int.parse(paths[2]);
+          print("new_index:" + index.toString());
+          return MaterialPageRoute(builder: (context) {
+            return NewsDetailPage(
+                title: _news.length - 1 >= index ? _news[index]['title'] : '',
+                imageUrl: _news.length - 1 >= index
+                    ? _news[index]['imageUrl']
+                    : 'assets/images/news01.png');
+          });
+        }
+        return null;
+      },
+      onUnknownRoute: (RouteSettings settings) { // 如果没有的匹配到任何路由的时候调用在此配置的路由
+        return MaterialPageRoute(builder: (context) {
+          return NewsListPage(_news, _addNews, _deleteNews);
+        });
+      },
+```
+
+
+
+调用示例
+
+```dart
+ Navigator.pushNamed(context, "/news/" + index.toString())
+```
+
+
+
+### 对话框
+
+需要配合使用的小部件
+
+- showDialog 
+- AlterDialog
+  - AlterDialog中的属性actions可以自定义动作，比如按钮
+
+使用示例
+
+```dart
+    showDialog(context: context, builder: (context){
+      return AlertDialog(
+        title: Text("确定吗"),
+        content: Text("删除后不可以撤回"),
+        actions: [
+          TextButton(onPressed: (){
+            Navigator.pop(context);// 弹出页面 代表关闭对话框
+            Navigator.pop(context,true); // 再次弹出页面，代表返回资讯列表，并且删除
+          }, child: Text("删除")),
+          TextButton(onPressed: (){
+            Navigator.pop(context);// 弹出页面 代表关闭对话框
+          }, child: Text("取消"))
+        ],
+      );
+    });
+```
+
+### 模态弹出层
+
+需要配合使用的小部件
+
+- showModalBottomSheet
+  - 注意参数1必须是context
+  - 参数二 builder 返回一个小部件
+
+使用示例
+
+```dart
+    return Center(
+        child: ElevatedButton(
+      child: Text("创建资讯"),
+      onPressed: () {
+        showModalBottomSheet(
+            context: context,
+            builder: (context) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text("这是一个模态弹出层"),
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text("确定"))
+                ],
+              );
+            });
+      },
+    ));
+```
+
+
+
+
+
+## 处理用户的输入
+
+### TextField输入框
+
+使用示例一
+
+```dart
+TextField(
+            decoration: InputDecoration( // 配置样式 设置TextField的样式、设置标签内容
+                labelText: '资讯标题'),
+            onChanged: (String value) {
+              setState(() {
+                title = value;
+              });
+            },
+          )
+```
+
+使用示例二
+
+```dart
+ TextField(
+            decoration: InputDecoration(labelText: '资讯描述'), // 配置样式 设置TextField的样式、设置标签内容
+            maxLines: 5, // 设置输入多行文本
+            keyboardType: TextInputType.text, // 设置键盘类型，配置文本输入类型
+            onChanged: (String value) {
+              setState(() {
+                description = value;
+              });
+            },
+          ),
+```
+
+### Switch开关
+
+使用示例
+
+```dart
+        SwitchListTile( 
+            title: Text("接受条款"), // 可以设置标题
+            value: _accept, // 小部件的值 只有true或者false
+            onChanged: (value) {
+              print(value);
+              setState(() {
+                _accept = value;
+              });
+            }),
+```
+
+
+
+## 深入学习小部件
+
+官网地址：https://flutter.dev/docs/development/ui/widgets
+
+不同的小部件可以完成同一个目标，所以主要了解小部件有哪些特性。
+
+### SizedBox占位小部件
+
+描述：占位的作用，什么也不展示
+
+属性：height、width
+
+### DecoratedBox修饰小部件
+
+描述：主要是样式修饰，例如添加背景色 ，边框、圆边角、以及颜色、阴影效果等。但是不可以设置亮度、对齐方式或者添加边距。
+
+属性：decoration
+
+建议：可以使用的Container代替，因为Container也可以配置decoration，并且可以设置亮度、对齐方式或添加边距。
+
+### Expanded扩充小部件和Flexible弹性小部件
+
+#### Expanded扩充小部件
+
+描述：尽可能的占用剩余的空间，
+
+#### Flexible弹性小部件
+
+描述：不是使用的所有的空间，但可以设置fit属性来配置
+
+#### 注意
+
+Flexible和Expanded必须在行和列中使用，Expanded使用的所有的空间，Flexible也可以使用所有的空间，但是需要配置。两者都包括flex参数，flex参数表示按照比例分配空间。
+
+### 
+
+### BoxDecoration设置背景图片
+
+示例：
+
+```dart
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    colorFilter: ColorFilter.mode(
+                        Colors.black.withOpacity(0.9), BlendMode.dstATop),
+                    fit: BoxFit.cover,
+                    image: AssetImage('assets/images/auth_backgroud.png'))),
+```
+
+
+
+### MediaQuery媒体查询小部件
+
+描述：通过此部件可以获取到当前媒体介质的屏幕属性（方向、宽度、高度）
+
+示例：
+
+```dart
+ double deviceWidth = MediaQuery.of(context).size.width; // 获取屏幕的宽度
+```
+
+
+
+### GestureDetector手势识别小部件
+
+描述：通过此部件可以写自定义按钮，也可以给任何小部件添加事件监听。
+
+示例：自定义按钮(添加单击事件监听)
+
+```dart
+        GestureDetector( // 自定义按钮
+          onTap: _submitForm,
+          child: Container(
+            padding: EdgeInsets.all(5.0),
+            color: Theme.of(context).primaryColor,
+            child: Text('创建'),
+          ),
+        )
+```
+
+
+
+
 
 
 
