@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app2/demo05/LcardAndWigetData/models/news_model.dart';
 import 'package:flutter_app2/demo05/LcardAndWigetData/pages/my_news.dart';
 import 'package:flutter_app2/demo05/LcardAndWigetData/pages/news_list.dart';
 
-import 'create_news.dart';
+import 'edit_news.dart';
 
 class ManagerNews extends StatelessWidget {
-  final List<Map<String, String>> _news;
-  final Function _addNews;
-  final Function _deleteNews;
-
-  ManagerNews(this._news, this._addNews, this._deleteNews);
-
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -27,7 +22,7 @@ class ManagerNews extends StatelessWidget {
                     onTap: () {
                       Navigator.pushReplacement(context,
                           MaterialPageRoute(builder: (context) {
-                        return NewsListPage(_news, _addNews, _deleteNews);
+                        return NewsListPage();
                       }));
                     },
                   )
@@ -50,7 +45,7 @@ class ManagerNews extends StatelessWidget {
               ),
             ),
             body: TabBarView(
-              children: [CreateNewsPagePage(_addNews, _deleteNews), MyNews()],
+              children: [EditNewsPage(), MyNewsPage()],
             )));
   }
 }

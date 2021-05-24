@@ -35,6 +35,7 @@ dependencies:
   #  path_provider:
   permission_handler: ^6.1.1
   flutter_sound: ^8.0.0
+  scoped_model: ^1.1.0
 
 
 dev_dependencies:

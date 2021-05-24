@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app2/demo05/LcardAndWigetData/pages/news_list.dart';
 
 // class AuthPage extends StatelessWidget {
 //   @override
@@ -90,7 +89,7 @@ class _AuthPageState extends State<AuthPage> {
                           }),
                       ElevatedButton(
                           onPressed: () {
-                            Navigator.pushReplacementNamed(context, 'home');
+                            Navigator.pushReplacementNamed(context, '/home');
                           },
                           child: Text('登录'))
                     ],

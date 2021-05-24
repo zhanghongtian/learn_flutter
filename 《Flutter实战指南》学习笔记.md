@@ -1,3 +1,5 @@
+# 基础篇
+
 ## Dart语言
 
 
@@ -66,6 +68,8 @@ symmetric 对称的
 
 horizontal 水平的
 
+Tile 瓦片、瓷砖、平铺
+
 
 
 
@@ -107,6 +111,18 @@ favorite 最喜欢的[在Icons中表示心型]
 border 边界、镶边、沿..的边
 
 
+
+### 表单相关
+
+validator 验证器
+
+FocusScope 聚焦镜
+
+FocusNode 聚焦节点
+
+
+
+Direction 方向
 
 
 
@@ -711,7 +727,85 @@ Flexible和Expanded必须在行和列中使用，Expanded使用的所有的空�
 
 
 
+### CircleAvatar圆形头像小部件
 
+```
+CircleAvatar(backgroundImage: AssetImage(_news[index]['imageUrl']))
+```
+
+
+
+
+
+## Form表单
+
+Form小部件
+
+- 和GlobalKey绑定
+
+FormState 小部件 记录form小部件的状态
+
+TextFormField小部件
+
+- 设置初始值initialValue
+- 验证器validator
+
+GlobalKey 全局key
+
+```dart
+  final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
+```
+
+表单验证两种方式
+
+- 在保存的时候验证
+- 在用户输入的时候验证
+
+FocusScope特别类
+
+```dart
+FocusScope.of(context).requestFocus(FocusNode()); // 获取焦点,返回空的FocusNode空对象
+```
+
+
+
+# 高级篇
+
+## 实现列表的滑动删除
+
+### Dismissible小部件
+
+要放到ListTile的最外层
+
+```dart
+ListView.builder(
+      itemBuilder: (BuildContext context, int index) {
+        Key key = Key(_news[index]['title']); // Key作用是标识list中的唯一记录，并告诉给DIsmissible
+        return Dismissible(key: key,  // Dismissible必须在ListTile最外层
+        onDismissed: (DismissDirection direction){ // 当滑动的时候，会调用此方法
+          if(direction == DismissDirection.endToStart){ // 
+            _deleteNews(index);
+          }
+        },
+        background: Container(color: Colors.red,),// 设置滑动之后的背景颜色
+        child: ListTile(
+          leading: CircleAvatar(backgroundImage: AssetImage(_news[index]['imageUrl'])),
+          title: Text(_news[index]['title']),
+          subtitle: Text(_news[index]['score']),
+          trailing: _buildEditButton(context,index),
+        )); 
+      },
+      itemCount: _news.length,
+    )
+```
+
+
+
+## 改进数据和状态的管理方式
+
+解决使用复杂的链条来传递数据
+
+### 第三方包scoped_model
 
 
 
@@ -727,7 +821,7 @@ Flexible和Expanded必须在行和列中使用，Expanded使用的所有的空�
 
 - 第一步
 
-  ```
+  ```dart
   cd ~/.cocoapods/repos
   pop repo remove master
   git clone https://gitee.com/mirrors/CocoaPods-Specs.git master
@@ -735,7 +829,7 @@ Flexible和Expanded必须在行和列中使用，Expanded使用的所有的空�
 
 - 第二步 在项目的ios目录中的Podfile文件中第一行添加
 
-  ```
+  ```dart
   source 'https://gitee.com/mirrors/CocoaPods-Specs.git'
   ```
 

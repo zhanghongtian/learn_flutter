@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app2/demo05/LcardAndWigetData/scoped_models/news_scope_model.dart';
 import 'package:flutter_app2/demo05/LcardAndWigetData/widgets/ui_element/title_default.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 class NewsDetailPage extends StatelessWidget {
-  final String title;
-  final String imageUrl;
-
-  NewsDetailPage({this.title, this.imageUrl});
-
   void _showDialogWarning(BuildContext context) {
     showDialog(
         context: context,
@@ -33,33 +30,37 @@ class NewsDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double deviceWidth = MediaQuery.of(context).size.width;
-    return WillPopScope(
-        child: Scaffold(
-          appBar: new AppBar(
-            title: Text("详情"),
-          ),
-          body: ListView(
-            children: [
-              Image.asset(imageUrl),
-              Center(child: TitleDefault(title)),
-              Container(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: (deviceWidth - deviceWidth * 0.2) / 2),
-                  child: ElevatedButton(
-                      onPressed: () => {
-                            // Navigator.pop(context, true),
-                            _showDialogWarning(context)
-                          },
-                      child: Text("返回")))
-            ],
-            // mainAxisAlignment: MainAxisAlignment.center,
-            // crossAxisAlignment: CrossAxisAlignment.center
-          ),
-        ),
-        onWillPop: () {
-          Navigator.pop(context, false);
-          return Future.value(false); // false 只弹出一个页面，true会继续弹出页面，直到没有页面弹出
-        });
+    return ScopedModelDescendant<NewsScopeModel>(
+      builder: (context, child, model) {
+        double deviceWidth = MediaQuery.of(context).size.width;
+        return WillPopScope(
+            child: Scaffold(
+              appBar: new AppBar(
+                title: Text("详情"),
+              ),
+              body: ListView(
+                children: [
+                  Image.asset(model.selectedNews.imageUrl),
+                  Center(child: TitleDefault(model.selectedNews.title)),
+                  Container(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: (deviceWidth - deviceWidth * 0.2) / 2),
+                      child: ElevatedButton(
+                          onPressed: () => {
+                                // Navigator.pop(context, true),
+                                _showDialogWarning(context)
+                              },
+                          child: Text("返回")))
+                ],
+                // mainAxisAlignment: MainAxisAlignment.center,
+                // crossAxisAlignment: CrossAxisAlignment.center
+              ),
+            ),
+            onWillPop: () {
+              Navigator.pop(context, false);
+              return Future.value(false); // false 只弹出一个页面，true会继续弹出页面，直到没有页面弹出
+            });
+      },
+    );
   }
 }
