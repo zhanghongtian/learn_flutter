@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app2/demo05/LcardAndWigetData/models/news_model.dart';
-import 'package:flutter_app2/demo05/LcardAndWigetData/scoped_models/news_scope_model.dart';
+import 'package:flutter_app2/demo05/LcardAndWigetData/scoped_models/main_scope_model.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 /**
@@ -56,7 +56,7 @@ class _EditNewsPageState extends State<EditNewsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ScopedModelDescendant<NewsScopeModel>(
+    return ScopedModelDescendant<MainScopeModel>(
       builder: (context, child, model) {
         Widget pageContent = _buildPageContent(context, model);
         return model.selectedIndex == null
@@ -73,7 +73,7 @@ class _EditNewsPageState extends State<EditNewsPage> {
     );
   }
 
-  void _submitForm(NewsScopeModel model) {
+  void _submitForm(MainScopeModel model) {
     if (!_formkey.currentState.validate()) {
       // 验证表单内容
       return;
@@ -85,20 +85,15 @@ class _EditNewsPageState extends State<EditNewsPage> {
     //   'description': description,
     //   'score': score.toString()
     // };
-    NewsModel newNews = new NewsModel(
-        title: _formData['title'],
-        description: _formData['description'],
-        imageUrl: _formData['imageUrl'],
-        score: double.parse(_formData['score']));
     if (model.selectedIndex == null) {
-      model.addNews(newNews);
+      model.addNews(_formData);
     } else {
-      model.updateNews(newNews);
+      model.updateNews(_formData);
     }
     Navigator.pushReplacementNamed(context, '/home');
   }
 
-  Widget _buildPageContent(BuildContext context, NewsScopeModel model) {
+  Widget _buildPageContent(BuildContext context, MainScopeModel model) {
     double deviceWidth = MediaQuery.of(context).size.width; // 获取屏幕的宽度
     double targetWidth =
         deviceWidth > 768.0 ? 500.0 : deviceWidth * 0.8; // 最终的宽度
@@ -210,7 +205,7 @@ class _EditNewsPageState extends State<EditNewsPage> {
   }
 
   Widget _buildSubmitButton(deviceWidth) {
-    return ScopedModelDescendant<NewsScopeModel>(
+    return ScopedModelDescendant<MainScopeModel>(
       builder: (context, child, model) {
         return GestureDetector(
           // 自定义按钮

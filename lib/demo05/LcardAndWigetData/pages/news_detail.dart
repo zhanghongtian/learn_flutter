@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app2/demo05/LcardAndWigetData/scoped_models/news_scope_model.dart';
+import 'package:flutter_app2/demo05/LcardAndWigetData/scoped_models/main_scope_model.dart';
 import 'package:flutter_app2/demo05/LcardAndWigetData/widgets/ui_element/title_default.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class NewsDetailPage extends StatelessWidget {
+  final int index;
+  NewsDetailPage(this.index);
   void _showDialogWarning(BuildContext context) {
     showDialog(
         context: context,
@@ -30,7 +32,7 @@ class NewsDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScopedModelDescendant<NewsScopeModel>(
+    return ScopedModelDescendant<MainScopeModel>(
       builder: (context, child, model) {
         double deviceWidth = MediaQuery.of(context).size.width;
         return WillPopScope(
@@ -40,8 +42,8 @@ class NewsDetailPage extends StatelessWidget {
               ),
               body: ListView(
                 children: [
-                  Image.asset(model.selectedNews.imageUrl),
-                  Center(child: TitleDefault(model.selectedNews.title)),
+                  Image.asset(model.newsList[index].imageUrl),
+                  Center(child: TitleDefault(model.newsList[index].title)),
                   Container(
                       padding: EdgeInsets.symmetric(
                           horizontal: (deviceWidth - deviceWidth * 0.2) / 2),

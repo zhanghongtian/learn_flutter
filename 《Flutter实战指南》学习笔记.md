@@ -70,6 +70,8 @@ horizontal 水平的
 
 Tile 瓦片、瓷砖、平铺
 
+Direction 方向
+
 
 
 
@@ -120,9 +122,31 @@ FocusScope 聚焦镜
 
 FocusNode 聚焦节点
 
+Favorite 最喜欢的
 
 
-Direction 方向
+
+
+
+### 状态管理相关
+
+Descendant 后代、子孙、子孙后代
+
+Listeners 听众、听者、收听者
+
+Notify 通知、通报
+
+notifyListeners 通知和告知听者 在scoped_model中是通知重新调用builder方法的作用
+
+mix 混合
+
+
+
+### 其他
+
+toggle 切换
+
+
 
 
 
@@ -213,7 +237,7 @@ ListView(
 
 
 
-### 使用方式一 
+### 使用方式二
 
 ​	适合长度比较多的 只渲染可以看到的小部件，会自动删除移除屏幕外的小部件，所以性能比较好
 

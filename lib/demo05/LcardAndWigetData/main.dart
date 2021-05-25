@@ -3,10 +3,10 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_app2/demo05/LcardAndWigetData/pages/manage_news.dart';
 import 'package:flutter_app2/demo05/LcardAndWigetData/pages/my_news.dart';
 import 'package:flutter_app2/demo05/LcardAndWigetData/pages/news_detail.dart';
-import 'package:flutter_app2/demo05/LcardAndWigetData/scoped_models/news_scope_model.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'pages/auth_page.dart';
 import 'pages/news_list.dart';
+import 'scoped_models/main_scope_model.dart';
 
 /**
  * 知识点：
@@ -28,8 +28,8 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return ScopedModel<NewsScopeModel>(
-        model: NewsScopeModel(),
+    return ScopedModel<MainScopeModel>(
+        model: MainScopeModel(),
         child: MaterialApp(
           routes: {
             // '/news': (context) {
@@ -103,7 +103,7 @@ class _MyAppState extends State<MyApp> {
               final index = int.parse(paths[2]);
               print("new_index:" + index.toString());
               return MaterialPageRoute(builder: (context) {
-                return NewsDetailPage();
+                return NewsDetailPage(index);
               });
             }
             // return MaterialPageRoute(builder: (context){

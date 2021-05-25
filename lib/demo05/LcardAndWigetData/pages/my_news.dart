@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app2/demo05/LcardAndWigetData/pages/edit_news.dart';
+import 'package:flutter_app2/demo05/LcardAndWigetData/scoped_models/main_scope_model.dart';
 import 'package:flutter_app2/demo05/LcardAndWigetData/scoped_models/news_scope_model.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class MyNewsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ScopedModelDescendant<NewsScopeModel>(
+    return ScopedModelDescendant<MainScopeModel>(
       builder: (context, child, model) {
         return Scaffold(
             body: ListView.builder(
@@ -40,7 +41,7 @@ class MyNewsPage extends StatelessWidget {
   }
 
   Widget _buildEditButton(
-      BuildContext context, int index, NewsScopeModel model) {
+      BuildContext context, int index, MainScopeModel model) {
     return IconButton(
       iconSize: 20,
       icon: Icon(Icons.edit),

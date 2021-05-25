@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app2/demo05/LcardAndWigetData/models/news_model.dart';
-import 'package:flutter_app2/demo05/LcardAndWigetData/scoped_models/news_scope_model.dart';
+import 'package:flutter_app2/demo05/LcardAndWigetData/scoped_models/main_scope_model.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import 'news_card.dart';
@@ -38,20 +38,24 @@ class News extends StatelessWidget {
   // todo ListView 使用方式2
   @override
   Widget build(BuildContext context) {
-    return ScopedModelDescendant<NewsScopeModel>(
-        builder: (BuildContext context, Widget child, NewsScopeModel model) {
-      return buildNewsList(model.newsList, model.deleteNews,model.selectNews);
+    return ScopedModelDescendant<MainScopeModel>(
+        builder: (BuildContext context, Widget child, MainScopeModel model) {
+      return buildNewsList(
+          model.displayNews, model.deleteNews, model.selectNews);
     });
   }
 
-  Widget buildNewsList(List<NewsModel> news, Function deleteNews,Function selectNews) {
+  Widget buildNewsList(
+      List<NewsModel> news, Function deleteNews, Function selectNews) {
     if (news.length <= 0) {
       return Center(child: Text("暂无资讯"));
     } else {
       return Expanded(
         child: ListView.builder(
           itemBuilder: (BuildContext context, int index) {
-            return NewsCard(index: index,);
+            return NewsCard(
+              index: index,
+            );
           },
           itemCount: news.length,
         ),
