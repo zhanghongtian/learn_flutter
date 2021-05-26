@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter_app2/demo05/LcardAndWigetData/models/news_model.dart';
 import 'package:flutter_app2/demo05/LcardAndWigetData/models/user_model.dart';
+import 'package:flutter_app2/demo05/LcardAndWigetData/utils/http.dart';
 
 class MixModel {
   List<NewsModel> _news = [];
@@ -41,13 +44,21 @@ mixin NewsScopeModel on MixModel {
     /**
      * 添加功能
      */
+
     NewsModel newNews = new NewsModel(
         title: _formData['title'],
         description: _formData['description'],
         imageUrl: _formData['imageUrl'],
         score: double.parse(_formData['score']),
         userName: _user.userName);
-
+    requestJson('http://39.107.155.171:7767/news-pai/addNews', data: {
+      "title": newNews.title,
+      "description": newNews.description,
+      "score": newNews.score.toString(),
+      "imageUrl": newNews.imageUrl,
+      "isFavorite": newNews.isFavorite.toString(),
+      "userName": newNews.userName
+    }).then((reponese) => print(reponese.statusCode));
     _news.add(newNews);
     _selectedIndex = null;
   }
