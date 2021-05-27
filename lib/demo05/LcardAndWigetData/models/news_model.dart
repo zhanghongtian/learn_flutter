@@ -17,4 +17,16 @@ class NewsModel {
       this.imageUrl,
       this.isFavorite = false,
       this.userName}); // 命名参数的构造器，required修饰的参数代表是必填的
+
+  factory NewsModel.fromJson(Map<String, dynamic> parsedJson) {
+    return NewsModel(
+      id: parsedJson['id'],
+      title: parsedJson['title'],
+      description: parsedJson['description'],
+      score: parsedJson['score'],
+      imageUrl: parsedJson['imageUrl'],
+      isFavorite: parsedJson['isFavorite'],
+      userName: parsedJson['userName']);
+  }
+
 }
