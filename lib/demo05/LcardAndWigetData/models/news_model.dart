@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class NewsModel {
+  final String id;
   final String title;
   final String description;
   final double score;
@@ -10,6 +11,7 @@ class NewsModel {
 
   NewsModel(
       {@required this.title,
+      this.id,
       this.description,
       this.score,
       this.imageUrl,

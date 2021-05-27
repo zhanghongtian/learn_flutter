@@ -26,10 +26,11 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  MainScopeModel model = MainScopeModel();
   @override
   Widget build(BuildContext context) {
     return ScopedModel<MainScopeModel>(
-        model: MainScopeModel(),
+        model: model,
         child: MaterialApp(
           routes: {
             // '/news': (context) {
@@ -45,7 +46,9 @@ class _MyAppState extends State<MyApp> {
               return ManagerNews();
             },
             '/home': (context) {
-              return NewsListPage();
+              return NewsListPage(
+                model: model,
+              );
             },
             '/': (context) {
               return AuthPage();
@@ -116,7 +119,9 @@ class _MyAppState extends State<MyApp> {
           },
           onUnknownRoute: (RouteSettings settings) {
             return MaterialPageRoute(builder: (context) {
-              return NewsListPage();
+              return NewsListPage(
+                model: model,
+              );
             });
           },
         ));

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter_app2/demo05/LcardAndWigetData/models/news_model.dart';
 import 'package:flutter_app2/demo05/LcardAndWigetData/models/user_model.dart';
 import 'package:flutter_app2/demo05/LcardAndWigetData/utils/http.dart';
@@ -51,16 +52,45 @@ mixin NewsScopeModel on MixModel {
         imageUrl: _formData['imageUrl'],
         score: double.parse(_formData['score']),
         userName: _user.userName);
-    requestJson('http://39.107.155.171:7767/news-pai/addNews', data: {
+    postJson('http://39.107.155.171:7767/news-pai/addNews', data: {
       "title": newNews.title,
       "description": newNews.description,
       "score": newNews.score.toString(),
       "imageUrl": newNews.imageUrl,
       "isFavorite": newNews.isFavorite.toString(),
       "userName": newNews.userName
-    }).then((reponese) => print(reponese.statusCode));
-    _news.add(newNews);
+    }).then((Response reponese) {
+      if (null != reponese) {
+        print(reponese.data);
+      }
+    });
     _selectedIndex = null;
+  }
+
+  void fetchNews() {
+    /**
+     * 获取所有的资讯
+     */
+    final List<NewsModel> getNewsList = [];
+    getRequest("http://39.107.155.171:7767/news-pai/allNewsList")
+        .then((Response response) {
+      print("获取资讯：${response.data}");
+      print("获取资讯：${response.data.runtimeType}");
+      List<dynamic> newsListData = response.data;
+      newsListData.forEach((dynamic dnewsData) {
+        Map<String,dynamic> newsData = dnewsData;
+        NewsModel newsModel = NewsModel(
+            id: newsData['id'],
+            title: newsData['title'],
+            description: newsData['description'],
+            score: double.parse(newsData['score']),
+            imageUrl: newsData['imageUrl'],
+            isFavorite: newsData['isFavorite'] == 'true',
+            userName: newsData['userName']);
+        getNewsList.add(newsModel);
+        _news = getNewsList;
+      });
+    });
   }
 
   void deleteNews() {

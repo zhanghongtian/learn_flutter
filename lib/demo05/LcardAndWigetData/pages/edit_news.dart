@@ -49,7 +49,8 @@ class _EditNewsPageState extends State<EditNewsPage> {
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
   final Map<String, String> _formData = {
     'title': null,
-    'imageUrl': 'assets/images/news01.png',
+    'imageUrl':
+        'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fn.sinaimg.cn%2Ffront%2F267%2Fw640h427%2F20181214%2FqKLS-hqackac5548179.jpg&refer=http%3A%2F%2Fn.sinaimg.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1624707783&t=012fe3e910d11a1bc98a80e591c57d11',
     'description': null,
     'score': null
   };
