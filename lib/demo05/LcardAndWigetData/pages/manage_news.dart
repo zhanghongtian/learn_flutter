@@ -48,7 +48,12 @@ class ManagerNews extends StatelessWidget {
                   ),
                 ),
                 body: TabBarView(
-                  children: [EditNewsPage(), MyNewsPage()],
+                  children: [
+                    EditNewsPage(),
+                    MyNewsPage(
+                      model: model,
+                    )
+                  ],
                 )));
       },
     );

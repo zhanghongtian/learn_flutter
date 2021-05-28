@@ -1,10 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app2/demo05/LcardAndWigetData/pages/edit_news.dart';
 import 'package:flutter_app2/demo05/LcardAndWigetData/scoped_models/main_scope_model.dart';
-import 'package:flutter_app2/demo05/LcardAndWigetData/scoped_models/news_scope_model.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-class MyNewsPage extends StatelessWidget {
+class MyNewsPage extends StatefulWidget {
+  final MainScopeModel model;
+  MyNewsPage({Key key, this.model}) : super(key: key);
+
+  @override
+  _MyNewsPageState createState() => _MyNewsPageState();
+}
+
+class _MyNewsPageState extends State<MyNewsPage> {
+  @override
+  void initState() {
+    super.initState();
+    widget.model.fetchNews();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<MainScopeModel>(

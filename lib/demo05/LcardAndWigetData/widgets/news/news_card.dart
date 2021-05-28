@@ -76,7 +76,6 @@ class NewsCard extends StatelessWidget {
                       onPressed: () {
                         model.selectNews(index);
                         model.toggleFavorite();
-                        model.notifyListeners();
                       })
                 ],
                 alignment: MainAxisAlignment.end,

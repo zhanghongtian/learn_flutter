@@ -40,23 +40,27 @@ class NewsDetailPage extends StatelessWidget {
               appBar: new AppBar(
                 title: Text("详情"),
               ),
-              body: ListView(
-                children: [
-                  Image.network(model.newsList[index].imageUrl),
-                  Center(child: TitleDefault(model.newsList[index].title)),
-                  Container(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: (deviceWidth - deviceWidth * 0.2) / 2),
-                      child: ElevatedButton(
-                          onPressed: () => {
-                                // Navigator.pop(context, true),
-                                _showDialogWarning(context)
-                              },
-                          child: Text("返回")))
-                ],
-                // mainAxisAlignment: MainAxisAlignment.center,
-                // crossAxisAlignment: CrossAxisAlignment.center
-              ),
+              body: model.newsList.length > 0
+                  ? ListView(
+                      children: [
+                        Image.network(model.newsList[index].imageUrl),
+                        Center(
+                            child: TitleDefault(model.newsList[index].title)),
+                        Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal:
+                                    (deviceWidth - deviceWidth * 0.2) / 2),
+                            child: ElevatedButton(
+                                onPressed: () => {
+                                      // Navigator.pop(context, true),
+                                      _showDialogWarning(context)
+                                    },
+                                child: Text("返回")))
+                      ],
+                      // mainAxisAlignment: MainAxisAlignment.center,
+                      // crossAxisAlignment: CrossAxisAlignment.center
+                    )
+                  : Container(),
             ),
             onWillPop: () {
               Navigator.pop(context, false);

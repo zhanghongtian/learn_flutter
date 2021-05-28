@@ -5,13 +5,18 @@ import 'package:flutter_app2/demo05/LcardAndWigetData/models/news_model.dart';
 import 'package:flutter_app2/demo05/LcardAndWigetData/models/response_common_model.dart';
 import 'package:flutter_app2/demo05/LcardAndWigetData/models/user_model.dart';
 import 'package:flutter_app2/demo05/LcardAndWigetData/utils/http.dart';
-import 'package:flutter_app2/demo05/LcardAndWigetData/utils/httputil.dart';
+import 'package:scoped_model/scoped_model.dart';
 
-class MixModel {
+class MixModel extends Model {
   List<NewsModel> _news = [];
   int _selectedIndex; // 选中的资讯下标
   bool _showFavorites = false; //过滤内收藏内容的状态
   UserModel _user;
+  bool _isLoading = false; // 是否显示加载条
+
+  bool get isLoading {
+    return _isLoading;
+  }
 }
 
 /**
@@ -32,7 +37,6 @@ mixin NewsScopeModel on MixModel {
       return null;
     }
     NewsModel n = _news[_selectedIndex];
-    _selectedIndex = null;
     return n;
   }
 
@@ -43,7 +47,7 @@ mixin NewsScopeModel on MixModel {
     _selectedIndex = index;
   }
 
-  void addNews(Map<String, String> _formData) {
+  Future<Null> addNews(Map<String, String> _formData) async {
     /**
      * 添加功能
      */
@@ -69,15 +73,17 @@ mixin NewsScopeModel on MixModel {
     _selectedIndex = null;
   }
 
-  void fetchNews(){
+  Future<Null> fetchNews() async {
     /**
      * 获取所有的资讯
      */
+    _isLoading = true;
     final List<NewsModel> getNewsList = [];
-    getRequest("http://39.107.155.171:7767/news-pai/allNewsList").then((response){
+    getRequest("http://39.107.155.171:7767/news-pai/allNewsList")
+        .then((response) {
       var data = json.decode(response.toString());
-      ResponseCommonBean responseCommonBean =  ResponseCommonBean.from(data);
-      List<NewsModel> newsModel  = responseCommonBean.data;
+      ResponseCommonBean responseCommonBean = ResponseCommonBean.from(data);
+      List<NewsModel> newsModel = responseCommonBean.data;
       newsModel.forEach((NewsModel newsData) {
         NewsModel newsModel = NewsModel(
             id: newsData.id,
@@ -88,10 +94,11 @@ mixin NewsScopeModel on MixModel {
             isFavorite: newsData.isFavorite,
             userName: newsData.userName);
         getNewsList.add(newsModel);
-        _news = getNewsList;
       });
-          }
-      );
+      _news = getNewsList;
+      _isLoading = false;
+      notifyListeners();
+    });
     print("获取完数据");
   }
 
@@ -99,23 +106,41 @@ mixin NewsScopeModel on MixModel {
     /**
      * 删除功能
      */
-    // if (_news.length >= _selectedIndex) {
-    _news.removeAt(_selectedIndex);
+    postJson(
+            'http://39.107.155.171:7767/news-pai/deleteNews/${selectedNews.id}')
+        .then((Response reponese) {
+      if (null != reponese) {
+        print(reponese.data);
+      }
+      fetchNews();
+    });
     _selectedIndex = null;
-    // }
   }
 
-  void updateNews(Map<String, String> _formData) {
+  Future<Null> updateNews(Map<String, String> _formData) async {
     /**
      * 更新功能
      */
     NewsModel newNews = new NewsModel(
+        id: selectedNews.id,
         title: _formData['title'],
         description: _formData['description'],
         imageUrl: _formData['imageUrl'],
         score: double.parse(_formData['score']),
         userName: _user.userName);
-    _news[_selectedIndex] = newNews;
+    postJson('http://39.107.155.171:7767/news-pai/addNews', data: {
+      "id": newNews.id,
+      "title": newNews.title,
+      "description": newNews.description,
+      "score": newNews.score.toString(),
+      "imageUrl": newNews.imageUrl,
+      "isFavorite": newNews.isFavorite.toString(),
+      "userName": newNews.userName
+    }).then((Response reponese) {
+      if (null != reponese) {
+        print(reponese.data);
+      }
+    });
     _selectedIndex = null;
   }
 
@@ -133,7 +158,7 @@ mixin NewsScopeModel on MixModel {
         isFavorite: newValue);
     _news[_selectedIndex] = news;
     _selectedIndex = null;
-    // notifyListeners();
+    notifyListeners();
   }
 
   bool get displayFavorite {
@@ -145,7 +170,7 @@ mixin NewsScopeModel on MixModel {
      * 切换过滤的状态
      */
     _showFavorites = !_showFavorites;
-    // notifyListeners();
+    notifyListeners();
   }
 
   List<NewsModel> get displayNews {

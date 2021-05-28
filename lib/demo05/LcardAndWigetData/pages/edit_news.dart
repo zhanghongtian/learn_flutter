@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app2/demo05/LcardAndWigetData/models/news_model.dart';
 import 'package:flutter_app2/demo05/LcardAndWigetData/scoped_models/main_scope_model.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -87,12 +86,14 @@ class _EditNewsPageState extends State<EditNewsPage> {
     //   'score': score.toString()
     // };
     if (model.selectedIndex == null) {
-      model.addNews(_formData);
+      model
+          .addNews(_formData)
+          .then((value) => Navigator.pushReplacementNamed(context, '/home'));
     } else {
-      model.updateNews(_formData);
+      model
+          .updateNews(_formData)
+          .then((value) => Navigator.pushReplacementNamed(context, '/home'));
     }
-    model.notifyListeners();
-    Navigator.pushReplacementNamed(context, '/home');
   }
 
   Widget _buildPageContent(BuildContext context, MainScopeModel model) {
@@ -180,6 +181,7 @@ class _EditNewsPageState extends State<EditNewsPage> {
                               .hasMatch(value)) {
                         return '不能为空并且必须是数字类型';
                       }
+                      return null;
                     },
                     onSaved: (String value) {
                       // setState(() {
@@ -209,26 +211,34 @@ class _EditNewsPageState extends State<EditNewsPage> {
   Widget _buildSubmitButton(deviceWidth) {
     return ScopedModelDescendant<MainScopeModel>(
       builder: (context, child, model) {
-        return GestureDetector(
-          // 自定义按钮
-          onTap: () {
-            _submitForm(model);
-          },
-          child: Container(
-            decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
-                borderRadius: BorderRadius.circular(5.0) // border
+        return model.isLoading
+            ? Container(
+                child: Center(
+                child: CircularProgressIndicator(),
+              ))
+            : GestureDetector(
+                // 自定义按钮
+                onTap: () {
+                  _submitForm(model);
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColor,
+                      borderRadius: BorderRadius.circular(5.0) // border
+                      ),
+                  alignment: Alignment.center,
+                  height: 35,
+                  margin: EdgeInsets.fromLTRB(
+                      (deviceWidth - deviceWidth * 0.4) / 2,
+                      5,
+                      (deviceWidth - deviceWidth * 0.4) / 2,
+                      10),
+                  child: Text(
+                    '创建',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
-            alignment: Alignment.center,
-            height: 35,
-            margin: EdgeInsets.fromLTRB((deviceWidth - deviceWidth * 0.4) / 2,
-                5, (deviceWidth - deviceWidth * 0.4) / 2, 10),
-            child: Text(
-              '创建',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-        );
+              );
       },
     );
   }

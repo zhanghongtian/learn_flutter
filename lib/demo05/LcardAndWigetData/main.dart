@@ -40,7 +40,9 @@ class _MyAppState extends State<MyApp> {
             //   );
             // },
             '/my_news': (context) {
-              return MyNewsPage();
+              return MyNewsPage(
+                model: model,
+              );
             },
             '/admin': (context) {
               return ManagerNews();
