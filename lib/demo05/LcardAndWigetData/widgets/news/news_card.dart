@@ -17,7 +17,7 @@ class NewsCard extends StatelessWidget {
         return Card(
           child: Column(
             children: <Widget>[
-              Image.asset(model.newsList[index].imageUrl,
+              Image.network(model.newsList[index].imageUrl,
                   width: 400, height: 90),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

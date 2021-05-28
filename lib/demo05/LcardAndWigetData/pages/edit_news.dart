@@ -91,6 +91,7 @@ class _EditNewsPageState extends State<EditNewsPage> {
     } else {
       model.updateNews(_formData);
     }
+    model.notifyListeners();
     Navigator.pushReplacementNamed(context, '/home');
   }
 

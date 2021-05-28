@@ -34,7 +34,7 @@ Future<Response> postForm(url, {data}) async {
   }
 }
 
-Future<Response> getRequest(url, {data}) async {
+Future getRequest(url, {data}) async {
   try {
     Dio dio = Dio();
     Response response = await dio.get(url, queryParameters: data);
@@ -50,21 +50,21 @@ Future<Response> getRequest(url, {data}) async {
 }
 
 
-class CommonBean{
+class CommonBean2{
   int code;
-  List<NewsModel> data;
+  List<NewsModel2> data;
 
-  CommonBean({this.code, this.data});
+  CommonBean2({this.code, this.data});
 
-  factory CommonBean.from(Map<String, dynamic> parsedJson){
-    return CommonBean(
+  factory CommonBean2.from(Map<String, dynamic> parsedJson){
+    return CommonBean2(
       code:parsedJson['code'],
-      data: (parsedJson['data'] as List).map((e) => NewsModel.fromJson(e)).toList(),
+      data: (parsedJson['data'] as List).map((e) => NewsModel2.fromJson(e)).toList(),
     );
   }
 }
 
-class NewsModel {
+class NewsModel2 {
   final String id;
   final String title;
   final String description;
@@ -73,7 +73,7 @@ class NewsModel {
   final bool isFavorite; // 是否收藏
   final String userName;
 
-  NewsModel({ this.title,
+  NewsModel2({ this.title,
     this.id,
     this.description,
     this.score,
@@ -81,8 +81,8 @@ class NewsModel {
     this.isFavorite = false,
     this.userName}); // 命名参数的构造器，required修饰的参数代表是必填的
 
-  factory NewsModel.fromJson(Map<String, dynamic> parsedJson) {
-    return NewsModel(
+  factory NewsModel2.fromJson(Map<String, dynamic> parsedJson) {
+    return NewsModel2(
         id: parsedJson['id'],
         title: parsedJson['title'],
         description: parsedJson['description'],
@@ -105,7 +105,7 @@ void main(List<String> args) {
   getRequest('http://39.107.155.171:7767/news-pai/allNewsList').then((response){
     var data = json.decode(response.toString());
     print(data.runtimeType);
-    CommonBean commonBean= CommonBean.from(data);
+    CommonBean2 commonBean= CommonBean2.from(data);
     print(commonBean.data[0].imageUrl);
     // print(response);
   } );

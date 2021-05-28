@@ -14,10 +14,11 @@ class NewsListPage extends StatefulWidget {
 
 class _NewsListPageState extends State<NewsListPage> {
   @override
-  void initState() {
+  void initState(){
     // TODO: implement initState
     super.initState();
     widget.model.fetchNews();
+    print("初始化news");
   }
 
   @override

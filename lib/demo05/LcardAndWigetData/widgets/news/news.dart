@@ -40,6 +40,7 @@ class News extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScopedModelDescendant<MainScopeModel>(
         builder: (BuildContext context, Widget child, MainScopeModel model) {
+          print(model.displayNews);
       return buildNewsList(
           model.displayNews, model.deleteNews, model.selectNews);
     });

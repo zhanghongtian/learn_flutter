@@ -42,7 +42,7 @@ class NewsDetailPage extends StatelessWidget {
               ),
               body: ListView(
                 children: [
-                  Image.asset(model.newsList[index].imageUrl),
+                  Image.network(model.newsList[index].imageUrl),
                   Center(child: TitleDefault(model.newsList[index].title)),
                   Container(
                       padding: EdgeInsets.symmetric(

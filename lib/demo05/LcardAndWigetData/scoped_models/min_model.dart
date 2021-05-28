@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_app2/demo05/LcardAndWigetData/models/news_model.dart';
+import 'package:flutter_app2/demo05/LcardAndWigetData/models/response_common_model.dart';
 import 'package:flutter_app2/demo05/LcardAndWigetData/models/user_model.dart';
 import 'package:flutter_app2/demo05/LcardAndWigetData/utils/http.dart';
+import 'package:flutter_app2/demo05/LcardAndWigetData/utils/httputil.dart';
 
 class MixModel {
   List<NewsModel> _news = [];
@@ -65,30 +69,30 @@ mixin NewsScopeModel on MixModel {
     _selectedIndex = null;
   }
 
-  void fetchNews() {
+  void fetchNews(){
     /**
      * 获取所有的资讯
      */
     final List<NewsModel> getNewsList = [];
-    getRequest("http://39.107.155.171:7767/news-pai/allNewsList")
-        .then((Response response) {
-      print("获取资讯：${response.data}");
-      print("获取资讯：${response.data.runtimeType}");
-      List<dynamic> newsListData = response.data;
-      newsListData.forEach((dynamic dnewsData) {
-        Map<String,dynamic> newsData = dnewsData;
+    getRequest("http://39.107.155.171:7767/news-pai/allNewsList").then((response){
+      var data = json.decode(response.toString());
+      ResponseCommonBean responseCommonBean =  ResponseCommonBean.from(data);
+      List<NewsModel> newsModel  = responseCommonBean.data;
+      newsModel.forEach((NewsModel newsData) {
         NewsModel newsModel = NewsModel(
-            id: newsData['id'],
-            title: newsData['title'],
-            description: newsData['description'],
-            score: double.parse(newsData['score']),
-            imageUrl: newsData['imageUrl'],
-            isFavorite: newsData['isFavorite'] == 'true',
-            userName: newsData['userName']);
+            id: newsData.id,
+            title: newsData.title,
+            description: newsData.description,
+            score: newsData.score,
+            imageUrl: newsData.imageUrl,
+            isFavorite: newsData.isFavorite,
+            userName: newsData.userName);
         getNewsList.add(newsModel);
         _news = getNewsList;
       });
-    });
+          }
+      );
+    print("获取完数据");
   }
 
   void deleteNews() {

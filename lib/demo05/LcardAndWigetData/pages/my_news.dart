@@ -28,7 +28,7 @@ class MyNewsPage extends StatelessWidget {
                 child: ListTile(
                   leading: CircleAvatar(
                       backgroundImage:
-                          AssetImage(model.newsList[index].imageUrl)),
+                          NetworkImage(model.newsList[index].imageUrl)),
                   title: Text(model.newsList[index].title),
                   subtitle: Text(model.newsList[index].score.toString()),
                   trailing: _buildEditButton(context, index, model),
