@@ -17,8 +17,12 @@ class NewsCard extends StatelessWidget {
         return Card(
           child: Column(
             children: <Widget>[
-              Image.network(model.newsList[index].imageUrl,
-                  width: 400, height: 90),
+              FadeInImage(
+                placeholder: AssetImage("assets/images/news01.png"),
+                image: NetworkImage(model.newsList[index].imageUrl),
+                height: 300,
+                fit: BoxFit.cover,
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -56,12 +60,11 @@ class NewsCard extends StatelessWidget {
                       //     deleteNews(index);
                       //   }
                       // });
-                      Navigator.pushNamed(context,
-                              "/news/" + index.toString())
+                      Navigator.pushNamed(context, "/news/" + index.toString())
                           .then((value) {
                         print(value);
                         if (value) {
-                          model.selectNews(index);
+                          model.selectNews(model.newsList[index].id);
                           model.deleteNews();
                         }
                       });
@@ -74,7 +77,7 @@ class NewsCard extends StatelessWidget {
                           ? Icons.favorite
                           : Icons.favorite_border),
                       onPressed: () {
-                        model.selectNews(index);
+                        model.selectNews(model.newsList[index].id);
                         model.toggleFavorite();
                       })
                 ],

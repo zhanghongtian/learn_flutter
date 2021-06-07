@@ -7,9 +7,11 @@ import 'package:flutter_app2/demo05/LcardAndWigetData/models/user_model.dart';
 import 'package:flutter_app2/demo05/LcardAndWigetData/utils/http.dart';
 import 'package:scoped_model/scoped_model.dart';
 
+enum AuthMode { Singup, Login }
+
 class MixModel extends Model {
   List<NewsModel> _news = [];
-  int _selectedIndex; // 选中的资讯下标
+  String _selectedNewsId; // 选中的资讯下标
   bool _showFavorites = false; //过滤内收藏内容的状态
   UserModel _user;
   bool _isLoading = false; // 是否显示加载条
@@ -23,9 +25,9 @@ class MixModel extends Model {
  * 管理状态数据
  */
 mixin NewsScopeModel on MixModel {
-  int get selectedIndex {
+  String get selectedNewsId {
     // 获取选择下标的方法
-    return _selectedIndex;
+    return _selectedNewsId;
   }
 
   List<NewsModel> get newsList {
@@ -33,44 +35,55 @@ mixin NewsScopeModel on MixModel {
   }
 
   NewsModel get selectedNews {
-    if (_selectedIndex == null) {
+    if (_selectedNewsId == null) {
       return null;
     }
-    NewsModel n = _news[_selectedIndex];
-    return n;
+    return _news.firstWhere((NewsModel news) {
+      return news.id == _selectedNewsId;
+    });
   }
 
-  void selectNews(int index) {
+  void selectNews(String newsId) {
     /**
      * 查看功能
      */
-    _selectedIndex = index;
+    _selectedNewsId = newsId;
   }
 
-  Future<Null> addNews(Map<String, String> _formData) async {
+  Future<bool> addNews(Map<String, String> _formData) async {
     /**
      * 添加功能
      */
-
+    bool isSuccess = true;
     NewsModel newNews = new NewsModel(
         title: _formData['title'],
         description: _formData['description'],
         imageUrl: _formData['imageUrl'],
         score: double.parse(_formData['score']),
         userName: _user.userName);
-    postJson('http://39.107.155.171:7767/news-pai/addNews', data: {
+    Response response =
+        await postJson('http://39.107.155.171:7767/news-pai/addNews', data: {
       "title": newNews.title,
       "description": newNews.description,
       "score": newNews.score.toString(),
       "imageUrl": newNews.imageUrl,
       "isFavorite": newNews.isFavorite.toString(),
       "userName": newNews.userName
-    }).then((Response reponese) {
-      if (null != reponese) {
-        print(reponese.data);
-      }
     });
-    _selectedIndex = null;
+    print(response);
+    Map data = Map.from(response.data);
+    print(data['code']);
+    if (null != response &&
+        (response.statusCode == 200 || response.statusCode == 201) &&
+        data['code'] == 0) {
+      isSuccess = true;
+    } else {
+      isSuccess = false;
+    }
+    _isLoading = false;
+    _selectedNewsId = null;
+    notifyListeners();
+    return isSuccess;
   }
 
   Future<Null> fetchNews() async {
@@ -114,7 +127,7 @@ mixin NewsScopeModel on MixModel {
       }
       fetchNews();
     });
-    _selectedIndex = null;
+    _selectedNewsId = null;
   }
 
   Future<Null> updateNews(Map<String, String> _formData) async {
@@ -141,7 +154,7 @@ mixin NewsScopeModel on MixModel {
         print(reponese.data);
       }
     });
-    _selectedIndex = null;
+    _selectedNewsId = null;
   }
 
   void toggleFavorite() {
@@ -156,8 +169,11 @@ mixin NewsScopeModel on MixModel {
         imageUrl: selectedNews.imageUrl,
         score: selectedNews.score,
         isFavorite: newValue);
+    final _selectedIndex = _news.indexWhere((NewsModel news) {
+      return news.id == _selectedNewsId;
+    });
     _news[_selectedIndex] = news;
-    _selectedIndex = null;
+    _selectedNewsId = null;
     notifyListeners();
   }
 
@@ -186,13 +202,68 @@ mixin NewsScopeModel on MixModel {
       return List.from(_news);
     }
   }
+
+  void resetSelectedNews() {
+    /**
+     * 重置选中的资讯id
+     */
+    _selectedNewsId = null;
+  }
 }
 
 /**
  * 用户模型的状态管理
  */
 mixin UserScopeMedol on MixModel {
-  void login(String userName, String password) {
-    _user = UserModel(id: '1', userName: userName, password: password);
+  Future<Map<String, dynamic>> login(String username, String password) async {
+    _isLoading = true;
+    print("username:" + username + '\t' + 'password:' + password);
+    Map<String, dynamic> result = {'success': false, 'massage': '注册失败'};
+    // 方法中异步方法
+    Response response = await postForm(
+        "http://39.107.155.171:7767/news-api/login",
+        data: {"username": username, "password": password});
+    print(response);
+    if (response != null &&
+        (response.statusCode == 200 || response.statusCode == 201)) {
+      Map<String, dynamic> data = Map.from(response.data);
+      if (data['code'] == 0) {
+        Map<String, dynamic> userInfo = data['data'];
+        result = {'success': true, 'massage': '登录成功'};
+        _user = UserModel(
+            id: userInfo['id'], userName: username, password: password);
+      }
+      if (data['code'] == 102) {
+        result = {'success': false, 'massage': '不存在这个用户'};
+      }
+      if (data['code'] == 103) {
+        result = {'success': false, 'massage': '密码不正确'};
+      }
+    }
+    _isLoading = false;
+    return result;
+  }
+
+  Future<Map<String, dynamic>> singup(String username, String password) async {
+    _isLoading = true;
+    print("username:" + username + '\t' + 'password:' + password);
+    Map<String, dynamic> result = {'success': false, 'massage': '注册失败'};
+    // 方法中异步方法
+    Response response = await postForm(
+        "http://39.107.155.171:7767/news-api/signup",
+        data: {"username": username, "password": password});
+    print(response);
+    if (response != null &&
+        (response.statusCode == 200 || response.statusCode == 201)) {
+      Map<String, dynamic> data = Map.from(response.data);
+      if (data['code'] == 0) {
+        result = {'success': true, 'massage': '注册成功'};
+      }
+      if (data['code'] == 101) {
+        result = {'success': false, 'massage': '用户已经注册'};
+      }
+    }
+    _isLoading = false;
+    return result;
   }
 }

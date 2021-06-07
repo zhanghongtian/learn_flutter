@@ -31,7 +31,7 @@ class _MyNewsPageState extends State<MyNewsPage> {
                 onDismissed: (DismissDirection direction) {
                   //当滑动删除的时候，会调用此方法
                   if (direction == DismissDirection.endToStart) {
-                    model.selectNews(index);
+                    model.selectNews(model.newsList[index].id);
                     model.deleteNews();
                   }
                 },
@@ -44,7 +44,8 @@ class _MyNewsPageState extends State<MyNewsPage> {
                           NetworkImage(model.newsList[index].imageUrl)),
                   title: Text(model.newsList[index].title),
                   subtitle: Text(model.newsList[index].score.toString()),
-                  trailing: _buildEditButton(context, index, model),
+                  trailing: _buildEditButton(
+                      context, model.newsList[index].id, model),
                 ));
           },
           itemCount: model.newsList.length,
@@ -54,14 +55,14 @@ class _MyNewsPageState extends State<MyNewsPage> {
   }
 
   Widget _buildEditButton(
-      BuildContext context, int index, MainScopeModel model) {
+      BuildContext context, String newsId, MainScopeModel model) {
     return IconButton(
       iconSize: 20,
       icon: Icon(Icons.edit),
       onPressed: () {
         Navigator.push(context,
             MaterialPageRoute(builder: (BuildContext context) {
-          model.selectNews(index);
+          model.selectNews(newsId);
           return EditNewsPage();
         }));
       },

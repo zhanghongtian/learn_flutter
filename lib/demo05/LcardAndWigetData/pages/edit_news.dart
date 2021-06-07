@@ -59,16 +59,22 @@ class _EditNewsPageState extends State<EditNewsPage> {
     return ScopedModelDescendant<MainScopeModel>(
       builder: (context, child, model) {
         Widget pageContent = _buildPageContent(context, model);
-        return model.selectedIndex == null
+        return model.selectedNewsId == null
             ? Scaffold(
                 body: pageContent,
               )
-            : Scaffold(
-                appBar: AppBar(
-                  title: Text('编辑资讯'),
+            : WillPopScope(
+                child: Scaffold(
+                  appBar: AppBar(
+                    title: Text('编辑资讯'),
+                  ),
+                  body: pageContent,
                 ),
-                body: pageContent,
-              );
+                onWillPop: () {
+                  model.resetSelectedNews();
+                  Navigator.pop(context);
+                  return Future.value(false);
+                });
       },
     );
   }
@@ -85,10 +91,27 @@ class _EditNewsPageState extends State<EditNewsPage> {
     //   'description': description,
     //   'score': score.toString()
     // };
-    if (model.selectedIndex == null) {
+    if (model.selectedNewsId == null) {
       model
           .addNews(_formData)
-          .then((value) => Navigator.pushReplacementNamed(context, '/home'));
+          .then((bool isSuccess) {
+            print("isSuccess");
+            if(isSuccess){
+              Navigator.pushReplacementNamed(context, '/home');
+            }else{
+              showDialog(context: context, builder: (BuildContext context){
+                return AlertDialog(
+                  title: Text('提醒'),
+                  content: Text('服务端出错'),
+                  actions: <Widget>[
+                        ElevatedButton(onPressed: (){
+                          Navigator.pop(context);
+                        }, child: Text('确认')),
+                  ],
+                );
+              });
+            }
+          } );
     } else {
       model
           .updateNews(_formData)

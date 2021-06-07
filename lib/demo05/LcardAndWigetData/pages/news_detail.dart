@@ -51,10 +51,11 @@ class NewsDetailPage extends StatelessWidget {
                                 horizontal:
                                     (deviceWidth - deviceWidth * 0.2) / 2),
                             child: ElevatedButton(
-                                onPressed: () => {
-                                      // Navigator.pop(context, true),
-                                      _showDialogWarning(context)
-                                    },
+                                onPressed: () {
+                                  // Navigator.pop(context, true),
+                                  _showDialogWarning(context);
+                                  model.resetSelectedNews();
+                                },
                                 child: Text("返回")))
                       ],
                       // mainAxisAlignment: MainAxisAlignment.center,
