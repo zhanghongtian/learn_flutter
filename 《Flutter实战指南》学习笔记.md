@@ -112,6 +112,8 @@ favorite 最喜欢的[在Icons中表示心型]
 
 border 边界、镶边、沿..的边
 
+side 一边，一侧
+
 
 
 ### 表单相关
@@ -142,11 +144,19 @@ mix 混合
 
 
 
+### 按钮相关
+
+outline 勾勒什么的轮廓
+
+outlineButton 只有轮播和文字的按钮（可以装饰轮廓边框）
+
+### 
+
 ### 其他
 
 toggle 切换
 
-
+picker 选择器
 
 
 
@@ -835,7 +845,27 @@ ListView.builder(
 
 ### 第三方包scoped_model
 
+#### 作用：状态的集中管理
 
+#### 使用示例：
+
+创建Model类：
+
+![image-20210608170206914](/Users/zhanghongtian/Library/Application Support/typora-user-images/image-20210608170206914.png)
+
+主文件导入model
+
+![image-20210608170128652](/Users/zhanghongtian/Library/Application Support/typora-user-images/image-20210608170128652.png)
+
+
+
+在其他文件使用
+
+![image-20210608170359102](/Users/zhanghongtian/Library/Application Support/typora-user-images/image-20210608170359102.png)
+
+通知Scoped_Model刷新小部件树
+
+![image-20210608170521978](/Users/zhanghongtian/Library/Application Support/typora-user-images/image-20210608170521978.png)
 
 
 
@@ -860,4 +890,5 @@ ListView.builder(
   ```dart
   source 'https://gitee.com/mirrors/CocoaPods-Specs.git'
   ```
-
+  
+  

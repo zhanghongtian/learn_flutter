@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app2/demo05/LcardAndWigetData/models/common.dart';
 import 'package:flutter_app2/demo05/LcardAndWigetData/scoped_models/main_scope_model.dart';
 import 'package:flutter_app2/demo05/LcardAndWigetData/widgets/ui_element/title_default.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -43,7 +44,8 @@ class NewsDetailPage extends StatelessWidget {
               body: model.newsList.length > 0
                   ? ListView(
                       children: [
-                        Image.network(model.newsList[index].imageUrl),
+                        Image.network(
+                            CommonConfig.HOST + model.newsList[index].imageUrl),
                         Center(
                             child: TitleDefault(model.newsList[index].title)),
                         Container(

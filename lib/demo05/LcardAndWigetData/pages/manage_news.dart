@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app2/demo05/LcardAndWigetData/pages/my_news.dart';
 import 'package:flutter_app2/demo05/LcardAndWigetData/pages/news_list.dart';
 import 'package:flutter_app2/demo05/LcardAndWigetData/scoped_models/main_scope_model.dart';
+import 'package:flutter_app2/demo05/LcardAndWigetData/widgets/ui_element/logout.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import 'edit_news.dart';
@@ -21,6 +22,8 @@ class ManagerNews extends StatelessWidget {
                         title: Text("选择"),
                       ),
                       ListTile(
+                        leading: Icon(Icons.view_list_outlined,
+                            size: 20, color: Theme.of(context).primaryColor),
                         title: Text("资讯列表"),
                         onTap: () {
                           Navigator.pushReplacement(context,
@@ -28,7 +31,8 @@ class ManagerNews extends StatelessWidget {
                             return NewsListPage(model: model);
                           }));
                         },
-                      )
+                      ),
+                      Logout()
                     ],
                   ),
                 ),
@@ -38,11 +42,11 @@ class ManagerNews extends StatelessWidget {
                     tabs: [
                       Tab(
                         text: "创建资讯",
-                        icon: Icon(Icons.create),
+                        // icon: Icon(Icons.create),
                       ),
                       Tab(
                         text: "我的资讯",
-                        icon: Icon(Icons.edit),
+                        // icon: Icon(Icons.edit),
                       )
                     ],
                   ),

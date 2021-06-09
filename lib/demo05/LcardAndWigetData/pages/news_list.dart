@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app2/demo05/LcardAndWigetData/news_manager.dart';
 import 'package:flutter_app2/demo05/LcardAndWigetData/scoped_models/main_scope_model.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:flutter_app2/demo05/LcardAndWigetData/widgets/ui_element/logout.dart';
 
 class NewsListPage extends StatefulWidget {
   final MainScopeModel model;
@@ -14,7 +15,7 @@ class NewsListPage extends StatefulWidget {
 
 class _NewsListPageState extends State<NewsListPage> {
   @override
-  void initState(){
+  void initState() {
     super.initState();
     widget.model.fetchNews();
     print("初始化news");
@@ -35,15 +36,16 @@ class _NewsListPageState extends State<NewsListPage> {
                 ),
                 ListTile(
                   leading: Icon(
-                    Icons.favorite,
+                    Icons.edit,
                     size: 20,
-                    color: Colors.red,
+                    color: Theme.of(context).primaryColor,
                   ),
                   title: Text("管理资讯"),
                   onTap: () {
                     Navigator.pushReplacementNamed(context, '/admin');
                   },
-                )
+                ),
+                Logout()
               ],
             ),
           ),

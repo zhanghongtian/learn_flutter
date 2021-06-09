@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_app2/demo05/LcardAndWigetData/scoped_models/main_scope_model.dart';
+import 'package:flutter_app2/demo05/LcardAndWigetData/widgets/ui_element/image.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 /**
@@ -48,8 +51,7 @@ class _EditNewsPageState extends State<EditNewsPage> {
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
   final Map<String, String> _formData = {
     'title': null,
-    'imageUrl':
-        'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fn.sinaimg.cn%2Ffront%2F267%2Fw640h427%2F20181214%2FqKLS-hqackac5548179.jpg&refer=http%3A%2F%2Fn.sinaimg.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1624707783&t=012fe3e910d11a1bc98a80e591c57d11',
+    'imageUrl': null,
     'description': null,
     'score': null
   };
@@ -91,27 +93,47 @@ class _EditNewsPageState extends State<EditNewsPage> {
     //   'description': description,
     //   'score': score.toString()
     // };
+    if (_formData['imageUrl'] == null) {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('提示'),
+              content: Text('资讯图片不能为空'),
+              actions: <Widget>[
+                ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text('确认')),
+              ],
+            );
+          });
+      return;
+    }
     if (model.selectedNewsId == null) {
-      model
-          .addNews(_formData)
-          .then((bool isSuccess) {
-            print("isSuccess");
-            if(isSuccess){
-              Navigator.pushReplacementNamed(context, '/home');
-            }else{
-              showDialog(context: context, builder: (BuildContext context){
+      model.addNews(_formData).then((bool isSuccess) {
+        print("isSuccess");
+        if (isSuccess) {
+          Navigator.pushReplacementNamed(context, '/home');
+        } else {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
                 return AlertDialog(
                   title: Text('提醒'),
                   content: Text('服务端出错'),
                   actions: <Widget>[
-                        ElevatedButton(onPressed: (){
+                    ElevatedButton(
+                        onPressed: () {
                           Navigator.pop(context);
-                        }, child: Text('确认')),
+                        },
+                        child: Text('确认')),
                   ],
                 );
               });
-            }
-          } );
+        }
+      });
     } else {
       model
           .updateNews(_formData)
@@ -213,6 +235,9 @@ class _EditNewsPageState extends State<EditNewsPage> {
                     },
                   ),
                 ),
+                ImageInput(
+                  setImage: this._setImage,
+                ),
                 SwitchListTile(
                     title: Text("接受条款"),
                     value: _accept,
@@ -257,12 +282,23 @@ class _EditNewsPageState extends State<EditNewsPage> {
                       (deviceWidth - deviceWidth * 0.4) / 2,
                       10),
                   child: Text(
-                    '创建',
+                    model.selectedNewsId!=null?'保存':'创建',
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
               );
       },
     );
+  }
+
+  void _setImage(File file, MainScopeModel model) async {
+    model.toggleLoading(true);
+    String url = await model.uploadFile(file);
+    if (null != url) {
+      setState(() {
+        _formData['imageUrl'] = url;
+      });
+    }
+    model.toggleLoading(false);
   }
 }

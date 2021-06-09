@@ -19,7 +19,8 @@ class NewsCard extends StatelessWidget {
             children: <Widget>[
               FadeInImage(
                 placeholder: AssetImage("assets/images/news01.png"),
-                image: NetworkImage(model.newsList[index].imageUrl),
+                image: NetworkImage("http://39.107.155.171:7767" +
+                    model.newsList[index].imageUrl),
                 height: 300,
                 fit: BoxFit.cover,
               ),
@@ -77,6 +78,8 @@ class NewsCard extends StatelessWidget {
                           ? Icons.favorite
                           : Icons.favorite_border),
                       onPressed: () {
+                        print(model.newsList);
+                        print(index);
                         model.selectNews(model.newsList[index].id);
                         model.toggleFavorite();
                       })

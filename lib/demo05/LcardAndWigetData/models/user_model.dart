@@ -7,6 +7,10 @@ class UserModel {
   String id;
   String userName;
   String password;
+  String token;
   UserModel(
-      {@required this.id, @required this.userName, @required this.password});
+      {@required this.id,
+      @required this.userName,
+      this.password,
+      @required this.token});
 }
