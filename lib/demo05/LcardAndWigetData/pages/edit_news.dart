@@ -237,6 +237,7 @@ class _EditNewsPageState extends State<EditNewsPage> {
                 ),
                 ImageInput(
                   setImage: this._setImage,
+                  initImage: this._initImage,
                 ),
                 SwitchListTile(
                     title: Text("接受条款"),
@@ -282,7 +283,7 @@ class _EditNewsPageState extends State<EditNewsPage> {
                       (deviceWidth - deviceWidth * 0.4) / 2,
                       10),
                   child: Text(
-                    model.selectedNewsId!=null?'保存':'创建',
+                    model.selectedNewsId != null ? '保存' : '创建',
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
@@ -300,5 +301,13 @@ class _EditNewsPageState extends State<EditNewsPage> {
       });
     }
     model.toggleLoading(false);
+  }
+
+  void _initImage(String url) async {
+    if (null != url) {
+      setState(() {
+        _formData['imageUrl'] = url;
+      });
+    }
   }
 }

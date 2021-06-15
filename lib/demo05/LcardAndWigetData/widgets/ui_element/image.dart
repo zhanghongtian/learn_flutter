@@ -7,8 +7,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class ImageInput extends StatefulWidget {
-  ImageInput({Key key, this.setImage}) : super(key: key);
+  ImageInput({Key key, this.setImage, this.initImage}) : super(key: key);
   final Function setImage;
+  final Function initImage;
 
   @override
   _ImageInputState createState() => _ImageInputState();
@@ -31,7 +32,10 @@ class _ImageInputState extends State<ImageInput> {
             onPressed: () {
               openImagePicker(context, model);
             },
-            child: Text("选择图片"),
+            child: Text(
+              "选择图片",
+              style: TextStyle(color: Theme.of(context).hintColor),
+            ),
           ),
           SizedBox(
             height: 10,
@@ -50,6 +54,7 @@ class _ImageInputState extends State<ImageInput> {
         height: 300,
       );
     } else if (model.selectedNewsId != null) {
+      widget.initImage(model.selectedNews.imageUrl);
       return Image.network(
         CommonConfig.HOST + model.selectedNews.imageUrl,
         fit: BoxFit.cover,
@@ -57,13 +62,21 @@ class _ImageInputState extends State<ImageInput> {
       );
     } else {
       return Center(
-        child: Text('请选择图片',style: TextStyle(fontSize: 10),),
+        child: Text(
+          '请选择图片',
+          style: TextStyle(fontSize: 10),
+        ),
       );
     }
   }
 
   void getImage(ImageSource source, MainScopeModel model) {
-    picker.getImage(source: source, maxWidth: 400).then((PickedFile imageFile) {
+    picker
+        .getImage(
+            source: source,
+            maxWidth: 400,
+            preferredCameraDevice: CameraDevice.front)
+        .then((PickedFile imageFile) {
       print(imageFile.path);
       setState(() {
         _imageFile = imageFile.path;

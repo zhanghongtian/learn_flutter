@@ -38,7 +38,7 @@ class _NewsListPageState extends State<NewsListPage> {
                   leading: Icon(
                     Icons.edit,
                     size: 20,
-                    color: Theme.of(context).primaryColor,
+                    color: Theme.of(context).shadowColor,
                   ),
                   title: Text("管理资讯"),
                   onTap: () {

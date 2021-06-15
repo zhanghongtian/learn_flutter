@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app2/demo05/LcardAndWigetData/models/common.dart';
 import 'package:flutter_app2/demo05/LcardAndWigetData/scoped_models/main_scope_model.dart';
 import 'package:flutter_app2/demo05/LcardAndWigetData/widgets/ui_element/title_default.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -17,20 +18,22 @@ class NewsCard extends StatelessWidget {
         return Card(
           child: Column(
             children: <Widget>[
-              FadeInImage(
-                placeholder: AssetImage("assets/images/news01.png"),
-                image: NetworkImage("http://39.107.155.171:7767" +
-                    model.newsList[index].imageUrl),
-                height: 300,
-                fit: BoxFit.cover,
-              ),
+              Hero(
+                  tag: model.newsList[index].id,
+                  child: FadeInImage(
+                    placeholder: AssetImage(CommonConfig.PLACE_HOLDER),
+                    image: NetworkImage(
+                        CommonConfig.HOST + model.newsList[index].imageUrl),
+                    height: 300,
+                    fit: BoxFit.cover,
+                  )),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Flexible(
                       fit: FlexFit.tight,
                       flex: 15,
-                      child: TitleDefault(model.newsList[index].title)),
+                      child: TitleDefault(model.newsList[index].title, 15)),
                   SizedBox(
                     width: 10,
                   ),
@@ -46,8 +49,8 @@ class NewsCard extends StatelessWidget {
               ),
               ButtonBar(
                 children: [
-                  TextButton(
-                    child: Text('详情'),
+                  IconButton(
+                    icon: Icon(Icons.info),
                     onPressed: () {
                       // Navigator.push<bool>(context,
                       //     MaterialPageRoute(builder: (context) {

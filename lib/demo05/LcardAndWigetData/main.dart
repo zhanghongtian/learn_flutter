@@ -3,6 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_app2/demo05/LcardAndWigetData/pages/manage_news.dart';
 import 'package:flutter_app2/demo05/LcardAndWigetData/pages/my_news.dart';
 import 'package:flutter_app2/demo05/LcardAndWigetData/pages/news_detail.dart';
+import 'package:flutter_app2/demo05/LcardAndWigetData/widgets/custom_route.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'pages/auth_page.dart';
 import 'pages/news_list.dart';
@@ -78,8 +79,8 @@ class _MyAppState extends State<MyApp> {
         // 显示网格，调试布局
         theme: ThemeData(
             brightness: Brightness.light, // 定义应用的主题
-            primaryColor: Colors.deepOrange, // 定义主题的颜色
-            accentColor: Colors.deepOrange[100], // 定义访问演示
+            primaryColor: Colors.blueGrey, // 定义主题的颜色
+            accentColor: Colors.blueGrey, // 定义访问演示
             elevatedButtonTheme: ElevatedButtonThemeData(
                 // 定义所有elevateButton按钮的主题
                 style: ButtonStyle(
@@ -125,8 +126,8 @@ class _MyAppState extends State<MyApp> {
           if (paths[1] == 'news') {
             final index = int.parse(paths[2]);
             print("new_index:" + index.toString());
-            return MaterialPageRoute(builder: (context) {
-              return NewsDetailPage(index);
+            return CustomRoute<bool>(widgetBuilder: (context) {
+              return NewsDetailPage(index: index);
             });
           }
           // return MaterialPageRoute(builder: (context){

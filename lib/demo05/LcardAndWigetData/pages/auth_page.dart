@@ -30,14 +30,27 @@ class AuthPage extends StatefulWidget {
   _AuthPageState createState() => _AuthPageState();
 }
 
-class _AuthPageState extends State<AuthPage> {
-  String _username;
-  String _password;
+class _AuthPageState extends State<AuthPage> with TickerProviderStateMixin {
+  AnimationController _animationController; // 动画控制器
+  Animation<Offset> _slideAnimation; // 创建位置动画属性
   AuthMode _authMode = AuthMode.Login;
   Map<String, dynamic> _formData = {'username': Null, 'password': Null};
   bool _accept = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+        vsync: this,
+        duration: Duration(
+            milliseconds: 500)); // vsync 表示挡圈组件是动作组件，duration 表示动画的持续时间
+    _slideAnimation = Tween(begin: Offset(0, 1), end: Offset(0, 0)).animate(
+        CurvedAnimation(
+            parent: _animationController,
+            curve: Interval(0, 1, curve: Curves.fastOutSlowIn)));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,6 +97,12 @@ class _AuthPageState extends State<AuthPage> {
                                 //     _username = value;
                                 //   });
                                 // },
+                                validator: (String value) {
+                                  if (value.trim().length == 0) {
+                                    return '用户名不能为空';
+                                  }
+                                  return null;
+                                },
                                 onSaved: (value) {
                                   _formData['username'] = value;
                                 },
@@ -100,33 +119,48 @@ class _AuthPageState extends State<AuthPage> {
                                   //     _password = value;
                                   //   });
                                   // },
+                                  validator: (String value) {
+                                    if (value.trim().length == 0) {
+                                      return '密码不能为空';
+                                    }
+                                    return null;
+                                  },
                                   onSaved: (value) {
                                     _formData['password'] = value;
                                   }),
                               _authMode == AuthMode.Singup
-                                  ? TextFormField(
-                                      // obscureText: true,
-                                      autovalidateMode:
-                                          AutovalidateMode.onUserInteraction,
-                                      decoration: InputDecoration(
-                                          labelText: '确认',
-                                          filled: true,
-                                          fillColor:
-                                              Colors.white.withOpacity(0.5)),
-                                      // onChanged: (value) {
-                                      //   setState(() {
-                                      //     _password = value;
-                                      //   });
-                                      // },
-                                      onSaved: (value) {
-                                        _formData['password'] = value;
-                                      },
-                                      validator: (String value) {
-                                        if (_passwordController.text != value) {
-                                          return '两次密码输入不一致';
-                                        }
-                                        return null;
-                                      },
+                                  // 渐变动画 FadeTransition
+                                  ? SlideTransition(
+                                      // opacity: CurvedAnimation(
+                                      //     parent: _animationController,
+                                      //     curve: Interval(0, 1,
+                                      //         curve: Curves.easeIn)),
+                                      position: _slideAnimation,
+                                      child: TextFormField(
+                                        obscureText: true,
+                                        autovalidateMode:
+                                            AutovalidateMode.onUserInteraction,
+                                        decoration: InputDecoration(
+                                            labelText: '确认',
+                                            filled: true,
+                                            fillColor:
+                                                Colors.white.withOpacity(0.5)),
+                                        // onChanged: (value) {
+                                        //   setState(() {
+                                        //     _password = value;
+                                        //   });
+                                        // },
+                                        onSaved: (value) {
+                                          _formData['password'] = value;
+                                        },
+                                        validator: (String value) {
+                                          if (_passwordController.text !=
+                                              value) {
+                                            return '两次密码输入不一致';
+                                          }
+                                          return null;
+                                        },
+                                      ),
                                     )
                                   : Container(),
                               SwitchListTile(
@@ -143,9 +177,13 @@ class _AuthPageState extends State<AuthPage> {
                               TextButton(
                                   onPressed: () {
                                     setState(() {
-                                      _authMode == AuthMode.Login
-                                          ? _authMode = AuthMode.Singup
-                                          : _authMode = AuthMode.Login;
+                                      if (_authMode == AuthMode.Login) {
+                                        _authMode = AuthMode.Singup;
+                                        _animationController.forward();
+                                      } else {
+                                        _authMode = AuthMode.Login;
+                                        _animationController.reverse();
+                                      }
                                     });
                                   },
                                   child: Text(
@@ -168,13 +206,14 @@ class _AuthPageState extends State<AuthPage> {
   }
 
   void submit(MainScopeModel model) async {
-    if(!_formKey.currentState.validate()){
+    if (!_formKey.currentState.validate()) {
       return;
     }
     _formKey.currentState.save();
     Map<String, dynamic> response;
     if (_authMode == AuthMode.Login) {
-      response = await model.login(_formData['username'], _formData['password']);
+      response =
+          await model.login(_formData['username'], _formData['password']);
     } else {
       response =
           await model.singup(_formData['username'], _formData['password']);

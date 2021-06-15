@@ -23,7 +23,7 @@ class ManagerNews extends StatelessWidget {
                       ),
                       ListTile(
                         leading: Icon(Icons.view_list_outlined,
-                            size: 20, color: Theme.of(context).primaryColor),
+                            size: 20, color: Theme.of(context).shadowColor),
                         title: Text("资讯列表"),
                         onTap: () {
                           Navigator.pushReplacement(context,

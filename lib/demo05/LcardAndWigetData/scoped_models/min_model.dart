@@ -382,7 +382,10 @@ mixin UserScopeMedol on MixModel {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.clear();
     _user = null;
-    _authTimer.cancel();
+    _selectedNewsId = null;
+    if (_authTimer != null) {
+      _authTimer.cancel();
+    }
     _userSubject.add(false);
     // notifyListeners();
   }

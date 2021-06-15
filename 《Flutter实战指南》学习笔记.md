@@ -114,6 +114,8 @@ border 边界、镶边、沿..的边
 
 side 一边，一侧
 
+shadowColor 阴影颜色
+
 
 
 ### 表单相关
@@ -125,6 +127,8 @@ FocusScope 聚焦镜
 FocusNode 聚焦节点
 
 Favorite 最喜欢的
+
+obscureText 模糊的文本，设置密码框
 
 
 
@@ -150,13 +154,33 @@ outline 勾勒什么的轮廓
 
 outlineButton 只有轮播和文字的按钮（可以装饰轮廓边框）
 
-### 
+
+
+
+
+### 动画相关
+
+ScaleTransition 缩放转换
+
+CurvedAnimation 曲线动画
+
+rotation 旋转
+
+slide 滑动
+
+animation 动画
+
+secondaryAnimation 辅助动画
+
+
 
 ### 其他
 
 toggle 切换
 
 picker 选择器
+
+custom 自定义
 
 
 
@@ -866,6 +890,148 @@ ListView.builder(
 通知Scoped_Model刷新小部件树
 
 ![image-20210608170521978](/Users/zhanghongtian/Library/Application Support/typora-user-images/image-20210608170521978.png)
+
+
+
+
+
+## 动画实现
+
+#### 缩放小部件
+
+CurvedAnimation
+
+#### 旋转
+
+示例：
+
+```dart
+FloatingActionButton(
+  backgroundColor: Theme.of(context).primaryColor,
+  child: AnimatedBuilder(
+    animation: _animationController,
+    builder: (context, child) {
+      return Transform(
+        alignment: FractionalOffset.center, // 居中显示图标
+        transform: Matrix4.rotationZ(
+          _animationController.value * 0.5 * pi), // Z轴旋转
+        child: Icon(Icons.more_vert, color: Colors.white),
+      );
+    },
+  ),
+  onPressed: () {
+    if (_animationController.isDismissed) {
+      _animationController.forward();
+    } else {
+      _animationController.reverse();
+    }
+  },
+)
+```
+
+
+
+#### 滑动小部件
+
+SlideTransition
+
+```dart
+
+Animation<Offset> _slideAnimation; // 创建位置动画属性
+
+@override
+void initState() {
+	...
+  _slideAnimation = Tween(begin: Offset(0, 1), end: Offset(0, 0)).animate(
+    CurvedAnimation(
+      parent: _animationController,
+      curve: Interval(0, 1, curve: Curves.fastOutSlowIn)));
+}
+
+SlideTransition(
+  position: _slideAnimation,
+  child: TextFormField(
+    obscureText: true,
+    autovalidateMode:
+    AutovalidateMode.onUserInteraction,
+    decoration: InputDecoration(
+      labelText: '确认',
+      filled: true,
+      fillColor:
+      Colors.white.withOpacity(0.5)),
+    onSaved: (value) {
+      _formData['password'] = value;
+    },
+    validator: (String value) {
+      if (_passwordController.text !=
+          value) {
+        return '两次密码输入不一致';
+      }
+      return null;
+    },
+  ),
+)
+```
+
+
+
+#### 渐变小部件
+
+FadeTransition
+
+```
+FadeTransition(
+  opacity: CurvedAnimation(
+      parent: _animationController,
+      curve: Interval(0, 1,
+          curve: Curves.easeIn)),
+  child: TextFormField(
+    obscureText: true,
+    autovalidateMode:
+    AutovalidateMode.onUserInteraction,
+    decoration: InputDecoration(
+      labelText: '确认',
+      filled: true,
+      fillColor:
+      Colors.white.withOpacity(0.5)),
+    onSaved: (value) {
+      _formData['password'] = value;
+    },
+    validator: (String value) {
+      if (_passwordController.text !=
+          value) {
+        return '两次密码输入不一致';
+      }
+      return null;
+    },
+  ),
+)
+```
+
+
+
+
+
+动画控制器AnimationController
+
+动画配置Animation
+
+动画小部件
+
+- 动画小部件的parent需要是设置动画控制器
+- 动画小部件的需要设置动画配置
+
+
+
+
+
+
+
+## 使用平台的小部件（根据不同的平台使用不同的小部件）
+
+
+
+
 
 
 

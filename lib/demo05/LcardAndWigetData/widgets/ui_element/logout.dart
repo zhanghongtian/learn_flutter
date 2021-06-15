@@ -13,7 +13,7 @@ class Logout extends StatelessWidget {
           leading: Icon(
             Icons.logout,
             size: 20,
-            color: Theme.of(context).primaryColor
+            color: Theme.of(context).shadowColor
           ),
           title: Text("退出"),
           onTap: () {
